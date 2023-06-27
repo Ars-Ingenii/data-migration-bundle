@@ -16,25 +16,41 @@ declare(strict_types=1);
 
 namespace DataMigrationBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="ars_data_migration")
+ */
 class DataMigration
 {
     /**
      * @var int
+     *
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string", name="label", unique=true)
      */
     private $label;
 
     /**
      * @var bool
+     *
+     * @ORM\Column(type="boolean", name="executed", options={"default" : 0})
      */
     private $executed = false;
 
     /**
      * @var string
+     *
+     * @ORM\Column(type="string", name="path", unique=true)
      */
     private $path;
 
