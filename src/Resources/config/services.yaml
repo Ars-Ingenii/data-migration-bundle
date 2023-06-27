@@ -10,7 +10,6 @@ services:
     class: DataMigrationBundle\Service\DataMigrationChecker
     arguments:
       - '@doctrine.orm.entity_manager'
-      - '@DataMigrationBundle\Repository\DataMigrationRepository'
       - !tagged 'data_migration'
 
   ars.service.data_migrator:

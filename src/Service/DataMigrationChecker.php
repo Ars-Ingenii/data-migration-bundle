@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace DataMigrationBundle\Service;
 
+use DataMigrationBundle\Entity\DataMigration;
 use DataMigrationBundle\Repository\DataMigrationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -23,19 +24,18 @@ class DataMigrationChecker
 {
     private EntityManagerInterface $entityManager;
 
-    private DataMigrationRepository $dataMigrationRepository;
-
     /** @var DataMigrationInterface[] */
     private iterable $dataMigrations;
 
+    private DataMigrationRepository $dataMigrationRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        DataMigrationRepository $dataMigrationRepository,
         iterable $dataMigrations
     ) {
         $this->entityManager = $entityManager;
         $this->dataMigrations = $dataMigrations;
-        $this->dataMigrationRepository = $dataMigrationRepository;
+        $this->dataMigrationRepository = $entityManager->getRepository(DataMigration::class);
     }
 
     public function findNewDataMigrations()
