@@ -16,6 +16,9 @@ declare(strict_types=1);
 
 namespace DataMigrationBundle\DependencyInjection;
 
+use DataMigrationBundle\Entity\DataMigration;
+use DataMigrationBundle\Repository\DataMigrationRepository;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -26,13 +29,38 @@ final class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('data_migration');
         $treeRoot = $treeBuilder->getRootNode();
-
-        $treeRoot
-            ->children()
-            ->scalarNode('data_migration_dir')->defaultValue('')
-            ->end()
-        ;
+        $this->addResourcesSection($treeRoot);
 
         return $treeBuilder;
+    }
+
+
+    /**
+     * @param ArrayNodeDefinition $node
+     */
+    private function addResourcesSection(ArrayNodeDefinition $node)
+    {
+        $node
+            ->children()
+                ->arrayNode('resources')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('node_image')
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->variableNode('options')->end()
+                                ->arrayNode('classes')
+                                    ->addDefaultsIfNotSet()
+                                    ->children()
+                                        ->scalarNode('model')->defaultValue(DataMigration::class)->cannotBeEmpty()->end()
+                                        ->scalarNode('repository')->defaultValue(DataMigrationRepository::class)->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 }

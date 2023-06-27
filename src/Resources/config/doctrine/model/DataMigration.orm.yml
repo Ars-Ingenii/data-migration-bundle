@@ -14,3 +14,8 @@ DataMigrationBundle\Entity\DataMigration:
       unique: true
     executed:
       type: boolean
+    path:
+      type: string
+      length: 255
+      nullable: false
+      unique: true

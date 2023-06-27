@@ -33,6 +33,11 @@ class DataMigration
      */
     private $executed = false;
 
+    /**
+     * @var string
+     */
+    private $path;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -65,6 +70,18 @@ class DataMigration
     public function setExecuted(bool $executed): self
     {
         $this->executed = $executed;
+
+        return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setPath(?string $path): self
+    {
+        $this->path = $path;
 
         return $this;
     }
