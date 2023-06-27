@@ -5,12 +5,6 @@ services:
     tags:
       - console.command
 
-  ars.command.data_checker:
-    public: true
-    class: DataMigrationBundle\Command\DataMigrationCheckerCommand
-    tags:
-      - console.command
-
   ars.service.data_migration_checker:
     public: true
     class: DataMigrationBundle\Service\DataMigrationChecker
@@ -21,3 +15,11 @@ services:
   ars.service.data_migrator:
     public: true
     class: DataMigrationBundle\Service\DataMigrator
+
+  ars.command.data_checker:
+    public: true
+    class: DataMigrationBundle\Command\DataMigrationCheckerCommand
+    arguments:
+      - '@ars.service.data_migration_checker'
+    tags:
+      - console.command
