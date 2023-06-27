@@ -18,7 +18,7 @@
         "symfony/dependency-injection": "^5.1 || ^6.0",
         "symfony/config": "^5.3|^6.0",
         "symfony/yaml": "^5.0|^6.0",
-        "symfony/console": "6.4.x-dev",
+        "symfony/console": "^5.0|^6.0",
         "doctrine/doctrine-bundle":"^2.10",
         "doctrine/orm": "^2.15"
     },
