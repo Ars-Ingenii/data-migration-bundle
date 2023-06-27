@@ -1,0 +1,29 @@
+{
+    "name": "ars-ingenii/data-migration-bundle",
+    "description": "Bundle to migrate data",
+    "type": "symfony-bundle",
+    "autoload": {
+        "psr-4": {
+            "DataMigrationBundle\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ars-Ingenii",
+            "email": "info@arsingenii.lt"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "symfony/dependency-injection": "^5.1 || ^6.0",
+        "symfony/config": "^5.3|^6.0",
+        "symfony/yaml": "^5.0|^6.0",
+        "symfony/console": "6.4.x-dev",
+        "doctrine/doctrine-bundle":"^2.10",
+        "doctrine/orm": "^2.15"
+    },
+    "minimum-stability": "dev",
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    }
+}

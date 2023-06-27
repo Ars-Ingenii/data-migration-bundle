@@ -1,0 +1,16 @@
+services:
+  ars.command.data_migration:
+    public: true
+    class: DataMigrationBundle\Command\DataMigrationCommand
+    tags:
+      - console.command
+
+  ars.service.data_migration_checker:
+    public: true
+    class: DataMigrationBundle\Service\DataMigrationChecker
+    arguments:
+      - '@doctrine.orm.entity_manager'
+
+  ars.service.data_migrator:
+    public: true
+    class: DataMigrationBundle\Service\DataMigrator
