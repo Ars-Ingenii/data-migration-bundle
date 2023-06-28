@@ -92,7 +92,7 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
         return self::SUCCESS;
     }
 
-    public function setContainer(?ContainerInterface $container)
+    public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
