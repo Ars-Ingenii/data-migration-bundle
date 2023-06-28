@@ -1,0 +1,8 @@
+doctrine:
+  orm:
+    mappings:
+      DataMigrationBundle:
+        is_bundle: true
+        type: annotation
+        dir: 'src/Entity'
+        prefix: 'DataMigrationBundle\Entity'

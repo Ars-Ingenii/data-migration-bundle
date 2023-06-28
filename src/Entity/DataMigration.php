@@ -19,7 +19,7 @@ namespace DataMigrationBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="DataMigrationBundle\Repository\DataMigrationRepository")
  * @ORM\Table(name="ars_data_migration")
  */
 class DataMigration

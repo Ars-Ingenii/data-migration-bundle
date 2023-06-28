@@ -27,40 +27,5 @@ final class Configuration implements ConfigurationInterface
 
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('data_migration');
-        $treeRoot = $treeBuilder->getRootNode();
-        $this->addResourcesSection($treeRoot);
-
-        return $treeBuilder;
-    }
-
-
-    /**
-     * @param ArrayNodeDefinition $node
-     */
-    private function addResourcesSection(ArrayNodeDefinition $node)
-    {
-        $node
-            ->children()
-                ->arrayNode('resources')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->arrayNode('data_migration')
-                            ->addDefaultsIfNotSet()
-                            ->children()
-                                ->variableNode('options')->end()
-                                ->arrayNode('classes')
-                                    ->addDefaultsIfNotSet()
-                                    ->children()
-                                        ->scalarNode('model')->defaultValue(DataMigration::class)->cannotBeEmpty()->end()
-                                        ->scalarNode('repository')->defaultValue(DataMigrationRepository::class)->cannotBeEmpty()->end()
-                                    ->end()
-                                ->end()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ->end()
-        ;
     }
 }

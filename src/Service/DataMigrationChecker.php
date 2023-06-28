@@ -27,15 +27,12 @@ class DataMigrationChecker
     /** @var DataMigrationInterface[] */
     private iterable $dataMigrations;
 
-    private DataMigrationRepository $dataMigrationRepository;
-
     public function __construct(
         EntityManagerInterface $entityManager,
         iterable $dataMigrations
     ) {
         $this->entityManager = $entityManager;
         $this->dataMigrations = $dataMigrations;
-        $this->dataMigrationRepository = $entityManager->getRepository(DataMigration::class);
     }
 
     public function findNewDataMigrations()
@@ -43,7 +40,7 @@ class DataMigrationChecker
         foreach ($this->dataMigrations as $dataMigration) {
             if ($dataMigration instanceof DataMigrationInterface) {
                 $label = $dataMigration->getLabel();
-                $dataMigration = $this->dataMigrationRepository->findOneBy(['label' => $label]);
+//                $dataMigration = $this->dataMigrationRepository->findOneBy(['label' => $label]);
             }
         }
     }
