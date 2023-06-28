@@ -2,8 +2,14 @@ services:
   ars.command.data_migration:
     public: true
     class: DataMigrationBundle\Command\DataMigrationCommand
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - '@DataMigrationBundle\Repository\DataMigrationRepository'
+      - '@logger'
     tags:
       - console.command
+    calls:
+      - [ 'setContainer', [ '@service_container' ] ]
 
   ars.command.data_checker:
     public: true
@@ -11,6 +17,7 @@ services:
     arguments:
       - '@doctrine.orm.entity_manager'
       - '@DataMigrationBundle\Repository\DataMigrationRepository'
+      - '@logger'
       - !tagged 'data_migration'
     tags:
       - console.command

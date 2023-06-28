@@ -22,7 +22,7 @@
         "doctrine/doctrine-bundle":"^2",
         "doctrine/orm": "^2"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require-dev": {
         "roave/security-advisories": "dev-latest"
     }
