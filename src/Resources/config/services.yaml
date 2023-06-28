@@ -5,22 +5,13 @@ services:
     tags:
       - console.command
 
-  ars.service.data_migration_checker:
-    public: true
-    class: DataMigrationBundle\Service\DataMigrationChecker
-    arguments:
-      - '@doctrine.orm.entity_manager'
-      - !tagged 'data_migration'
-
-  ars.service.data_migrator:
-    public: true
-    class: DataMigrationBundle\Service\DataMigrator
-
   ars.command.data_checker:
     public: true
     class: DataMigrationBundle\Command\DataMigrationCheckerCommand
     arguments:
-      - '@ars.service.data_migration_checker'
+      - '@doctrine.orm.entity_manager'
+      - '@DataMigrationBundle\Repository\DataMigrationRepository'
+      - !tagged 'data_migration'
     tags:
       - console.command
 

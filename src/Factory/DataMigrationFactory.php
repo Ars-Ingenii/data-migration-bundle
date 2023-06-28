@@ -1,6 +1,6 @@
 <?php
-
 /*
+
  * ------------------------------------------------------------
  * Copyright (c) Ars Ingenii, UAB. All rights reserved.
  *
@@ -12,10 +12,17 @@
  * ------------------------------------------------------------
  */
 
-declare(strict_types=1);
+namespace DataMigrationBundle\Factory;
 
-namespace DataMigrationBundle\Service;
+use DataMigrationBundle\Entity\DataMigration;
 
-class DataMigrator
+class DataMigrationFactory
 {
+    public static function create(string $label, string $path): DataMigration
+    {
+        return (new DataMigration())
+            ->setLabel($label)
+            ->setExecuted(false)
+            ->setPath($path);
+    }
 }

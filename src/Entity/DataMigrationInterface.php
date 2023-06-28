@@ -14,7 +14,7 @@
 
 declare(strict_types=1);
 
-namespace DataMigrationBundle\Service;
+namespace DataMigrationBundle\Entity;
 
 interface DataMigrationInterface
 {
