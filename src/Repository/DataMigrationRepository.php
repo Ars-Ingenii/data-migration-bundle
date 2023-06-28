@@ -25,16 +25,4 @@ class DataMigrationRepository extends EntityRepository
     {
         parent::__construct($entityManager, new ClassMetadata(DataMigration::class));
     }
-
-    public function findNonExecutedDataMigrations(): array
-    {
-        $qb = $this->createQueryBuilder('dm');
-
-        $qb->select()
-            ->where('dm.executed = :executed')
-            ->setParameter('executed', false)
-        ;
-
-        return $qb->getQuery()->getResult();
-    }
 }

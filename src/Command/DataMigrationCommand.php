@@ -23,6 +23,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -56,25 +57,23 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
     {
         $this
             ->setDescription('Migrates data to database')
+            ->addOption('all', 'all', InputOption::VALUE_OPTIONAL, 'Execute all migrations.', false)
+            ->addArgument('name', InputOption::VALUE_OPTIONAL, 'Execute one migration by name.')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $dataMigrations = $this->dataMigrationRepository->findBy(['executed' => false]);
+            $label = $input->getArgument('name')[0] ?? null;
+            $executeAll = $input->getOption('all');
 
-            if (count($dataMigrations) === 0) {
-                $output->writeln('No data migrations to execute.');
-
-                return self::SUCCESS;
+            if ($executeAll !== false) {
+                $this->executeAllMigrations($output);
             }
 
-            /** @var DataMigration $migration */
-            foreach ($dataMigrations as $migration) {
-                /** @var DataMigrationInterface $service */
-                $service = $this->container->get($migration->getLabel());
-                $service->migrate();
+            if ($label !== null) {
+                $this->executeMigrationByLabel($output, $label);
             }
 
         } catch (\Exception $exception) {
@@ -95,5 +94,44 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
+    }
+
+    private function executeAllMigrations(OutputInterface $output): void
+    {
+        $dataMigrations = $this->dataMigrationRepository->findBy(['executed' => false]);
+
+        if (count($dataMigrations) === 0) {
+            $output->writeln('No data migrations to execute.');
+
+            return;
+        }
+
+        /** @var DataMigration $migration */
+        foreach ($dataMigrations as $migration) {
+            /** @var DataMigrationInterface $service */
+            $service = $this->container->get($migration->getLabel());
+            $service->migrate();
+            $migration->setExecuted(true);
+            $this->entityManager->persist($migration);
+        }
+
+        $this->entityManager->flush();
+    }
+
+    private function executeMigrationByLabel(OutputInterface $output, string $label): void
+    {
+        $dataMigration = $this->dataMigrationRepository->findOneBy(['label' => $label]);
+
+        if ($dataMigration === null) {
+            $output->writeln('No data migration found by label:' . $label);
+
+            return;
+        }
+
+        /** @var DataMigrationInterface $service */
+        $service = $this->container->get($dataMigration->getLabel());
+        $service->migrate();
+        $dataMigration->setExecuted(true);
+        $this->dataMigrationRepository->add($dataMigration);
     }
 }
