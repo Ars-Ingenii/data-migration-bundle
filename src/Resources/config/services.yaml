@@ -23,3 +23,9 @@ services:
       - '@ars.service.data_migration_checker'
     tags:
       - console.command
+
+  DataMigrationBundle\Repository\DataMigrationRepository:
+    public: true
+    autowire: true
+    tags:
+      - doctrine.repository_service
