@@ -4,5 +4,5 @@ doctrine:
       DataMigrationBundle:
         is_bundle: true
         type: annotation
-        dir: 'src/Entity'
+        dir: 'Entity'
         prefix: 'DataMigrationBundle\Entity'
