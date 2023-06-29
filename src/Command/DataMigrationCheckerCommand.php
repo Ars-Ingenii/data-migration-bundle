@@ -96,6 +96,6 @@ class DataMigrationCheckerCommand extends Command
 
     private function validate(string $label): bool
     {
-        return (bool) preg_match('/^ARS-\d{3,5}$/', $label);
+        return (bool) preg_match('/^ARS-\d{3,5}(-\d)?$/', $label);
     }
 }
