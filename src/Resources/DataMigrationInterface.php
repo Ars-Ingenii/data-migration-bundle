@@ -14,11 +14,11 @@
 
 declare(strict_types=1);
 
-namespace DataMigrationBundle\Entity;
+namespace DataMigrationBundle\Resources;
 
 interface DataMigrationInterface
 {
-    public function migrate(): void;
+    public function execute(): void;
 
-    public function getLabel(): string;
+    public function getName(): string;
 }

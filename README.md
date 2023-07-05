@@ -72,18 +72,18 @@ $ bin/console ars:migrate:data {name}
 
 ### Creating data migration class
 
-Class needs to implement `DataMigrationBundle\Entity\DataMigrationInterface`
+Class needs to implement `DataMigrationBundle\Resources\DataMigrationInterface`
 
 Interface comes with two methods:
 
 ```php
 interface DataMigrationInterface
 {
-    // `migrate` method used to migrate new data changes to your database.
-    public function migrate(): void;
+    // `execute` method used to migrate new data changes to your database.
+    public function execute(): void;
     
-    // `getLabel` method is used to return data migrations name. Migration name should match regular expression ^ARS-\d{3,5}$ 
-    public function getLabel(): string;
+    // `getName` method is used to return data migrations name. Migration name should match regular expression ^ARS-\d{3,5}$ 
+    public function getName(): string;
 }
 ```
 
@@ -95,7 +95,7 @@ interface DataMigrationInterface
 
 use App\Entity\Product\Product;
 use App\Repository\ProductRepository;
-use DataMigrationBundle\Entity\DataMigrationInterface;
+use DataMigrationBundle\Resources\DataMigrationInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ARS2153 implements DataMigrationInterface
@@ -120,7 +120,7 @@ class ARS2153 implements DataMigrationInterface
         $this->entityManager->flush();
     }
 
-    public function getLabel(): string
+    public function getName(): string
     {
         return 'ARS-2153';
     }

@@ -16,9 +16,9 @@ declare(strict_types=1);
 
 namespace DataMigrationBundle\Command;
 
-use DataMigrationBundle\Entity\DataMigrationInterface;
 use DataMigrationBundle\Factory\DataMigrationFactory;
 use DataMigrationBundle\Repository\DataMigrationRepository;
+use DataMigrationBundle\Resources\DataMigrationInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -63,7 +63,7 @@ class DataMigrationCheckerCommand extends Command
         try {
             foreach ($this->dataMigrations as $dataMigration) {
                 if ($dataMigration instanceof DataMigrationInterface) {
-                    $label = $dataMigration->getLabel();
+                    $label = $dataMigration->getName();
                     $record = $this->dataMigrationRepository->findOneBy(['label' => $label]);
 
                     if ($this->validate($label) === false) {
@@ -72,7 +72,7 @@ class DataMigrationCheckerCommand extends Command
                     }
 
                     if ($record === null) {
-                        $newDataMigrationData = DataMigrationFactory::create($dataMigration->getLabel(), get_class($dataMigration));
+                        $newDataMigrationData = DataMigrationFactory::create($dataMigration->getName(), get_class($dataMigration));
                         $this->entityManager->persist($newDataMigrationData);
                     }
                 }

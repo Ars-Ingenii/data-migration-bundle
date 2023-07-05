@@ -17,8 +17,8 @@ declare(strict_types=1);
 namespace DataMigrationBundle\Command;
 
 use DataMigrationBundle\Entity\DataMigration;
-use DataMigrationBundle\Entity\DataMigrationInterface;
 use DataMigrationBundle\Repository\DataMigrationRepository;
+use DataMigrationBundle\Resources\DataMigrationInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -110,7 +110,7 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
         foreach ($dataMigrations as $migration) {
             /** @var DataMigrationInterface $service */
             $service = $this->container->get($migration->getLabel());
-            $service->migrate();
+            $service->execute();
             $migration->setExecuted(true);
             $this->entityManager->persist($migration);
         }
@@ -130,7 +130,7 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
 
         /** @var DataMigrationInterface $service */
         $service = $this->container->get($dataMigration->getLabel());
-        $service->migrate();
+        $service->execute();
         $dataMigration->setExecuted(true);
         $this->dataMigrationRepository->add($dataMigration);
     }
