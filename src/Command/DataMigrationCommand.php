@@ -40,6 +40,8 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
 
     private LoggerInterface $logger;
 
+    private array $dataMigrations = [];
+
     public function __construct(
         EntityManagerInterface $entityManager,
         DataMigrationRepository $dataMigrationRepository,
@@ -133,5 +135,10 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
         $service->execute();
         $dataMigration->setExecuted(true);
         $this->dataMigrationRepository->add($dataMigration);
+    }
+
+    public function addDataMigrationService(DataMigrationInterface $service): void
+    {
+        $this->dataMigrations[] = $service;
     }
 }

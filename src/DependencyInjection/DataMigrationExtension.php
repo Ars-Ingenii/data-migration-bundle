@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace DataMigrationBundle\DependencyInjection;
 
+use DataMigrationBundle\DependencyInjection\Compiler\DataMigrationCompilerPass;
 use Exception;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
@@ -37,5 +38,6 @@ final class DataMigrationExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yaml');
+        $container->addCompilerPass(new DataMigrationCompilerPass());
     }
 }
