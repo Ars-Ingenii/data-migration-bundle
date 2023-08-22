@@ -10,7 +10,7 @@ class DataMigrationCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->has('ars.command.data_checker')) {
+        if (!$container->has('ars.command.data_migration')) {
             return;
         }
 
