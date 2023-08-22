@@ -25,4 +25,14 @@ class DataMigrationRepository extends EntityRepository
     {
         parent::__construct($entityManager, new ClassMetadata(DataMigration::class));
     }
+
+    public function getLabels(): array
+    {
+        $results = $this->createQueryBuilder('dm')
+            ->select('dm.label')
+            ->getQuery()
+            ->getScalarResult();
+
+        return array_column($results, 'label');
+    }
 }

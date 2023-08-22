@@ -41,13 +41,6 @@ class DataMigration
     private $label;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean", name="executed", options={"default" : 0})
-     */
-    private $executed = false;
-
-    /**
      * @var string
      *
      * @ORM\Column(type="string", name="path", unique=true)
@@ -74,18 +67,6 @@ class DataMigration
     public function setLabel(?string $label): self
     {
         $this->label = $label;
-
-        return $this;
-    }
-
-    public function isExecuted(): bool
-    {
-        return $this->executed;
-    }
-
-    public function setExecuted(bool $executed): self
-    {
-        $this->executed = $executed;
 
         return $this;
     }

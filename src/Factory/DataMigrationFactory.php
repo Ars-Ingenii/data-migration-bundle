@@ -22,7 +22,6 @@ class DataMigrationFactory
     {
         return (new DataMigration())
             ->setLabel($label)
-            ->setExecuted(false)
             ->setPath($path);
     }
 }

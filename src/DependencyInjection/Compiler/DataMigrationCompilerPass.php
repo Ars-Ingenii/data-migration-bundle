@@ -14,11 +14,11 @@ class DataMigrationCompilerPass implements CompilerPassInterface
             return;
         }
 
-        $definition = $container->findDefinition('ars.command.data_checker');
+        $definition = $container->findDefinition('ars.command.data_migration');
         $taggedServices = $container->findTaggedServiceIds('data_migration');
 
         foreach ($taggedServices as $id => $tags) {
-            $definition->addMethodCall('addDataMigrationService', [new Reference($id)]);
+            $definition->addMethodCall('addDataMigration', [new Reference($id)]);
         }
     }
 }

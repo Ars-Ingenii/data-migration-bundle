@@ -16,7 +16,7 @@ declare(strict_types=1);
 
 namespace DataMigrationBundle\Command;
 
-use DataMigrationBundle\Entity\DataMigration;
+use DataMigrationBundle\Factory\DataMigrationFactory;
 use DataMigrationBundle\Repository\DataMigrationRepository;
 use DataMigrationBundle\Resources\DataMigrationInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,8 +46,7 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
         EntityManagerInterface $entityManager,
         DataMigrationRepository $dataMigrationRepository,
         LoggerInterface $logger
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->entityManager = $entityManager;
@@ -77,12 +76,11 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
             if ($label !== null) {
                 $this->executeMigrationByLabel($output, $label);
             }
-
         } catch (\Exception $exception) {
             $this->logger->error(
                 'Data migration error occurred.',
                 [
-                    'message' => $exception->getMessage()
+                    'message' => $exception->getMessage(),
                 ]
             );
             $output->writeln('Exception occurred. ' . $exception->getMessage());
@@ -100,21 +98,20 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
 
     private function executeAllMigrations(OutputInterface $output): void
     {
-        $dataMigrations = $this->dataMigrationRepository->findBy(['executed' => false]);
+        $executedLabels = $this->dataMigrationRepository->getLabels();
+        $filteredLabels = array_diff_key($this->dataMigrations, array_flip($executedLabels));
 
-        if (count($dataMigrations) === 0) {
+        if (count($filteredLabels) === 0) {
             $output->writeln('No data migrations to execute.');
 
             return;
         }
 
-        /** @var DataMigration $migration */
-        foreach ($dataMigrations as $migration) {
-            /** @var DataMigrationInterface $service */
-            $service = $this->container->get($migration->getLabel());
-            $service->execute();
-            $migration->setExecuted(true);
-            $this->entityManager->persist($migration);
+        /** @var DataMigrationInterface $migration */
+        foreach ($filteredLabels as $migration) {
+            $migration->execute();
+            $newDataMigrationData = DataMigrationFactory::create($migration->getName(), get_class($migration));
+            $this->entityManager->persist($newDataMigrationData);
         }
 
         $this->entityManager->flush();
@@ -122,23 +119,27 @@ class DataMigrationCommand extends Command implements ContainerAwareInterface
 
     private function executeMigrationByLabel(OutputInterface $output, string $label): void
     {
-        $dataMigration = $this->dataMigrationRepository->findOneBy(['label' => $label]);
-
-        if ($dataMigration === null) {
+        if (!isset($this->dataMigrations[$label])) {
             $output->writeln('No data migration found by label:' . $label);
 
             return;
         }
 
         /** @var DataMigrationInterface $service */
-        $service = $this->container->get($dataMigration->getLabel());
+        $service = $this->dataMigrations[$label];
         $service->execute();
-        $dataMigration->setExecuted(true);
-        $this->dataMigrationRepository->add($dataMigration);
+
+        $record = $this->dataMigrationRepository->findOneBy(['label' => $label]);
+
+        if ($record === null) {
+            $newDataMigrationData = DataMigrationFactory::create($service->getName(), get_class($service));
+            $this->entityManager->persist($newDataMigrationData);
+            $this->entityManager->flush();
+        }
     }
 
-    public function addDataMigrationService(DataMigrationInterface $service): void
+    public function addDataMigration(DataMigrationInterface $definition): void
     {
-        $this->dataMigrations[] = $service;
+        $this->dataMigrations[$definition->getName()] = $definition;
     }
 }
